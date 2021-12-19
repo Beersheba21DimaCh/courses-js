@@ -61,7 +61,11 @@ const tableCourse = new TableHandler("courses-header", "courses-body", ["id", "c
 colledge.getAllCourses().forEach(c => tableCourse.addRow(c, c.id));
 FormHandler.fillOptions("course-name", courseData.courseName);
 FormHandler.fillOptions("lacturer-name", courseData.lecturers);
-formCourses.addHandler(colledge.addCourse.bind(colledge));
+formCourses.addHandler((course) =>  {
+    // colledge.addCourse.bind(colledge)
+    colledge.addCourse(course);
+    tableCourse.addRow(course, course.id);
+});
 
 // 
 

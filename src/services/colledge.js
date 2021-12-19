@@ -41,27 +41,27 @@ export default class Colledge {
     getElementsByHours(value){
         let interval = value.interval;
         let arr = this.#coursesProvider.get();
-        let arrCnt =  _.countBy(arr, e => {   
+        let objCnt =  _.countBy(arr, e => {   
            return Math.floor(e.hours/interval)*interval;
         });
-        return this.#getInterval(arrCnt, interval)
+        return this.#getInterval(objCnt, interval)
     }
 
     getElementsByCost(value){
         let interval = value.interval;
         let arr = this.#coursesProvider.get();
-        let arrCnt =  _.countBy(arr, e => {   
+        let objCnt =  _.countBy(arr, e => {   
            return Math.floor(e.cost/interval)*interval;
         });
-        return this.#getInterval(arrCnt, interval)
+        return this.#getInterval(objCnt, interval)
     }
 
-    #getInterval(array, interval){
+    #getInterval(objCnt, interval){
         let res = [];
-        for (let key in array) {
+        for (let key in objCnt) {
             let minInterval = key;
             let maxInterval = +key + +interval - 1;
-            let amount = array[key];
+            let amount = objCnt[key];
             res.push({minInterval:minInterval, maxInterval:maxInterval, amount:amount});
           }
         return res;
