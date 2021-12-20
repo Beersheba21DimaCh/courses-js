@@ -9,7 +9,7 @@ export default class Colledge {
         this.#coursesProvider = coursesProvider;
         this.#courseDate = courseDate;
     }
-    addCourse(course) {
+    async addCourse(course) {
         course.hours = +course.hours;
         course.cost = +course.cost;
         course.openDate = new Date(course.openDate);
@@ -17,39 +17,39 @@ export default class Colledge {
         if( (error = this.#validate(course)) != ''){
             throw new Error(error);
         }
-        const id = this.#getId();
+        const id = await this.#getId();
         course.id = id;
-        this.#coursesProvider.add(course);
+        return await this.#coursesProvider.add(course);
     }
 
-    removeCourse(id) { 
-        this.#coursesProvider.remove(id); 
+    async removeCourse(id) { 
+        return await this.#coursesProvider.remove(id); 
     }
 
-    #getId(){
+    async #getId(){
         let rndId;
         do {
             rndId = getRandomInteger(this.#courseDate.minId, this.#courseDate.maxId);
-        } while(this.#coursesProvider.exists(rndId));
+        } while(await this.#coursesProvider.exists(rndId));
         return rndId;
     }
 
-    getAllCourses(){
-        return this.#coursesProvider.get();
+    async getAllCourses(){
+       return await this.#coursesProvider.get();
     }
 
-    getElementsByHours(value){
+    async getElementsByHours(value){
         let interval = value.interval;
-        let arr = this.#coursesProvider.get();
+        let arr = await this.#coursesProvider.get();
         let objCnt =  _.countBy(arr, e => {   
            return Math.floor(e.hours/interval)*interval;
         });
         return this.#getInterval(objCnt, interval)
     }
 
-    getElementsByCost(value){
+    async getElementsByCost(value){
         let interval = value.interval;
-        let arr = this.#coursesProvider.get();
+        let arr = await this.#coursesProvider.get();
         let objCnt =  _.countBy(arr, e => {   
            return Math.floor(e.cost/interval)*interval;
         });
@@ -67,8 +67,8 @@ export default class Colledge {
         return res;
     }
 
-    sort(key) {
-        return _.sortBy(this.getAllCourses(), key);
+    async sort(key) {
+        return _.sortBy(await this.getAllCourses(), key);
     }
 
     #validate(course) {
